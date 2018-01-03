@@ -1,0 +1,21 @@
+.turmas {
+
+}
+
+.turmas-list {
+    margin-top: 20px;
+}
+
+.turmas .table {
+    margin-top: 30px;
+    float: left;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.loading {
+    margin-top: 40px;
+}
+

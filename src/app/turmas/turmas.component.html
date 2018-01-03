@@ -1,0 +1,50 @@
+<div class="turmas">
+  <app-menu></app-menu>
+
+  <div class="loading text-center" *ngIf="loading">
+    Carregando...
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
+
+  <div class="container turmas-list" *ngIf="!loading">
+    <h5 *ngIf="turmas && turmas.length > 0">
+      Minhas turmas
+      <button class="btn btn-sm btn-primary pull-right pointer" (click)="add()">
+        Adicionar turma
+        <i class="fa fa-plus"></i>
+      </button>
+    </h5>
+
+    <blank-state icon="fa fa-frown-o" *ngIf="!turmas || turmas.length === 0">
+      <h5>Você não tem turmas</h5>
+      <p>
+        Criando uma turma, você poderá adicionar atividades, conteúdos e acompanhar o desenvolvimento de seus alunos.
+      </p>
+      <button class="btn btn-primary btn-sm" (click)="add()">
+        Criar uma turma
+      </button>
+    </blank-state>
+    <table class="table table-striped" *ngIf="turmas && turmas.length > 0">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>N° de alunos</th>
+          <th>Deletar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let turma of turmas; let index = index;">
+          <td>
+            <a routerLink="/add-turma/{{turma.objectId}}">{{ turma.nome }}</a>
+          </td>
+          <td>{{ turma.alunos ? turma.alunos.length : 0 }}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="deletar(turma, index)" [disabled]="turma.deletando">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

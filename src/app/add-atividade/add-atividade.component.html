@@ -1,0 +1,241 @@
+<div class="add-atividade">
+  <app-menu></app-menu>
+  <div class="container">
+
+    <ngb-tabset *ngIf="!loadingInfo">
+      <ngb-tab title="Informações">
+        <ng-template ngbTabContent>
+          <h5>
+            {{ atividade.objectId ? atividade.nome : 'Nova atividade' }}
+
+            <button class="btn btn-sm pull-right btn-primary btn-link" routerLink="/add-turma/{{params.turma}}" [disabled]="atividadeInvalida(atividade) || loading">
+              Voltar
+            </button>
+
+            <button class="btn btn-sm pull-right btn-primary" (click)="add(atividade)" [disabled]="atividadeInvalida(atividade) || loading">
+              Salvar
+            </button>
+          </h5>
+          <form>
+            <div class="form-group">
+              <label>Nome da atividade</label>
+              <input placeholder="Escolha um nome para esta atividade" type="text" class="form-control" [(ngModel)]="atividade.nome" [ngModelOptions]="{standalone: true}">
+            </div>
+
+            <div class="form-group">
+              <label>Descrição de atividade</label>
+              <textarea placeholder="Descreva em algumas palavras esta atividade..." class="form-control" [(ngModel)]="atividade.descricao"
+                [ngModelOptions]="{standalone: true}"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>
+                Questões
+              </label>
+              <button class="btn btn-sm pull-right btn-primary" (click)="open(addQuestion)" *ngIf="atividade.questoes && atividade.questoes.length > 0">
+                Adicionar questão
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+
+            <div class="jumbotron" *ngIf="!atividade.questoes || atividade.questoes.length === 0">
+              <blank-state icon="fa fa-question-circle-o">
+                <h5>Nenhuma questão adicionada</h5>
+                <p>
+                  Adicione questões para acompanhar o desempenho dos seus alunos
+                </p>
+                <button class="btn btn-primary btn-sm" type="button" (click)="open(addQuestion)">
+                  Adicionar questão
+                </button>
+              </blank-state>
+            </div>
+
+            <ngb-accordion #acc="ngbAccordion" *ngIf="atividade.questoes && atividade.questoes.length > 0">
+              <ngb-panel title="{{question.enunciado.substring(0, 10)}}..." *ngFor="let question of atividade.questoes; let index = index;">
+                <ng-template ngbPanelContent>
+                  <div class="container">
+                    <button class="btn btn-sm btn-danger delete" (click)="atividade.questoes.splice(index, 1)">
+                      Deletar questão
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <div class="form-group top">
+                      <label>Enunciado</label>
+                      <textarea placeholder="Do que se trata a questão?" [(ngModel)]="question.enunciado" [ngModelOptions]="{standalone: true}"
+                        class="form-control"></textarea>
+                    </div>
+                    <table class="table table-striped" *ngIf="question.alternativas && question.alternativas.length > 0">
+                      <thead>
+                        <tr>
+                          <th>Alternativa</th>
+                          <th>Correta?</th>
+                          <th>Deletar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let alternativa of question.alternativas; let index = index">
+                          <td>
+                            <input type="text" [(ngModel)]="alternativa.text" class="form-control" [ngModelOptions]="{standalone: true}">
+                          </td>
+                          <td>
+                            <button class="btn" [ngClass]="alternativa.correct ? 'btn-success' : 'btn-secondary'" (click)="select(alternativa, index, question)">
+                              <i class="fa fa-check"></i>
+                            </button>
+                          </td>
+
+                          <td>
+                            <button class="btn btn-danger" (click)="question.alternativas.splice(index, 1)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <span class="tip">
+                      Clique no botão
+                      <i class="fa fa-check"></i> para selecionar uma alternativa correta.
+                    </span>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+
+            <span class="tip" *ngIf="atividade.questoes && atividade.questoes.length > 0">
+              Clique no título de uma das questões para expandir. Questões tem que ter
+              <b>no mínimo duas alternativas</b>.
+            </span>
+
+          </form>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Resultados">
+        <ng-template ngbTabContent>
+          <div *ngIf="respostas.length > 0">
+            <h5>Quantidade de alunos por % de acerto</h5>
+            <p class="gray-text">{{ respostas.length != 1 ? respostas.length + ' respostas' : respostas.length + ' resposta' }}</p>
+            <chart [type]="type" [data]="data" [options]="options"></chart>
+
+            <h5>Todas as respostas</h5>
+            <div class="tip">Clique no nome de um aluno para ver mais detalhes</div>
+            <table class="table table-striped respostas">
+              <thead>
+                <th>Nome do aluno</th>
+                <th>% de acerto</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let resposta of respostas">
+                  <td>
+                    <a class="pointer anchor" (click)="openRespostas(alunoResp, resposta)">{{ resposta.aluno.username }}</a>
+                  </td>
+                  <td>
+                    {{ getNota(resposta) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="respostas.length === 0" class="jumbotron margin-top">
+            <blank-state icon="fa fa-frown-o">
+              <h5>Nenhuma resposta ainda</h5>
+              <p>
+                Mas não se preocupe, seus alunos foram notificados desta atividade.
+              </p>
+            </blank-state>
+          </div>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</div>
+
+<ng-template #addQuestion let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Adicionar questão</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label>Enunciado da questão</label>
+      <textarea placeholder="Escreva aqui o enunciado da questão" class="form-control" [(ngModel)]="question.enunciado"></textarea>
+    </div>
+
+    <form class="form-group new-aluno" (submit)="addAlt(newAlt)">
+      <label>Alternativa</label>
+      <input placeholder="Escreva uma alternativa e adicione com 'Enter'" type="text" class="form-control" [(ngModel)]="newAlt"
+        [ngModelOptions]="{standalone: true}">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa fa-plus"></i>
+      </button>
+    </form>
+
+    <table class="table table-striped" *ngIf="question.alternativas && question.alternativas.length > 0">
+      <thead>
+        <tr>
+          <th>Alternativa</th>
+          <th>Correta?</th>
+          <th>Deletar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alternativa of question.alternativas; let index = index">
+          <td>{{ alternativa.text }}</td>
+          <td>
+            <button class="btn" [ngClass]="alternativa.correct ? 'btn-success' : 'btn-secondary'" (click)="select(alternativa, index, question)">
+              <i class="fa fa-check"></i>
+            </button>
+          </td>
+
+          <td>
+            <button class="btn btn-danger" (click)="question.alternativas.splice(index, 1)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <span class="tip" *ngIf="question.alternativas && question.alternativas.length > 0">
+      Clique no botão
+      <i class="fa fa-check"></i> para selecionar uma alternativa correta
+    </span>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Fechar</button>
+    <button type="button" class="btn btn-primary" (click)="addQuestao(question)" [disabled]="isInvalid(question)">Adicionar</button>
+  </div>
+</ng-template>
+
+<ng-template #alunoResp let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Respostas de {{ selected.aluno.username }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Enunciado</th>
+          <th>Resposta escolhida</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let questao of selected.questoes;">
+          <td>
+            {{ questao.enunciado }}
+          </td>
+          <td [ngClass]="questao.alternativas[questao.selected].correct ? 'text-green' : 'text-red'">
+            {{ questao.alternativas[questao.selected].text }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Fechar</button>
+  </div>
+</ng-template>

@@ -1,0 +1,13 @@
+<nav class="navbar navbar-inverse bg-inverse">
+  <div class="container">
+    <a class="navbar-brand">Nota 10</a>
+
+    <div class="menu">
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngFor="let item of menu">
+          <a class="nav-link" routerLink={{item.path}} [ngClass]="item.path.indexOf(path) > -1 ? 'active': ''">{{item.title}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

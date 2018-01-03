@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+.btn, .pointer {
+    cursor: pointer;
+}
+
+.tip {
+    font-size: .7rem;
+    margin: 20px 0;
+    float: left;
+    width: 100%;
+    color: #777;
+}
+
+.gray-text {
+    color: #777;
+}
+
+.anchor {
+    color: #0275d8 !important;
+}
+
+.anchor:hover {
+    text-decoration: underline !important;
+}
+
+.text-green {
+    color: #388E3C;
+}
+
+.text-red {
+    color: #D32F2F;
+}

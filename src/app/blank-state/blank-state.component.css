@@ -1,0 +1,16 @@
+.blank-state {
+    width: 250px;
+    display: block;
+    margin: 0 auto 0;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.blank-state /deep/ p {
+    font-size: .7rem;
+}
+
+.blank-state /deep/ i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}

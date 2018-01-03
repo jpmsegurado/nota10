@@ -1,0 +1,176 @@
+<div class="turmas">
+  <app-menu></app-menu>
+  <div class="container">
+
+    <div class="loading text-center" *ngIf="loadingInfo">
+      Carregando...
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
+
+    <ngb-tabset *ngIf="!loadingInfo">
+      <ngb-tab title="Informações">
+        <ng-template ngbTabContent>
+          <div class="new-turma">
+            <h5>
+              {{turma.objectId ? turma.nome : 'Nova turma'}}
+              <button class="btn btn-sm pull-right btn-primary" (click)="add(turma)" [disabled]="loading || turma.nome.length === 0">
+                Salvar
+              </button>
+            </h5>
+            <form (submit)="add(turma)">
+              <div class="form-group">
+                <label>
+                  Nome da turma
+                </label>
+                <input [(ngModel)]="turma.nome" [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Que tal algo bem sugestivo?. Ex: Turma das 15:00 - 16:00">
+              </div>
+
+              <div class="form-group" *ngIf="turma.objectId">
+                <label>
+                  Chave da turma
+                </label>
+                <input [(ngModel)]="turma.chave" [ngModelOptions]="{standalone: true}" class="form-control" readonly>
+                <div class="tip">
+                  Passe essa chave <strong>apenas</strong> para os alunos desta turma.
+                  Assim, eles poderão se inscrever na turma sozinhos.
+                </div>
+              </div>
+
+              <div class="form-group new-aluno">
+                <label>Alunos</label>
+                <button class="btn btn-sm btn-primary" type="button" (click)="open(content)" [disabled]="loading" *ngIf="turma.alunos && turma.alunos.length > 0">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+
+              <table class="table table-striped" *ngIf="turma.alunos && turma.alunos.length > 0">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Remover</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let aluno of turma.alunos; let index = index;">
+                    <td>{{ aluno.username }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-danger" (click)="turma.alunos.splice(index)" [disabled]="loading">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="jumbotron" *ngIf="!turma.alunos || turma.alunos.length === 0">
+                <blank-state icon="fa fa-users">
+                  <h5>Turma sem alunos</h5>
+                  <p>
+                    Adicione alunos para acompanhar seu desempenho
+                  </p>
+                  <button class="btn btn-primary btn-sm" (click)="open(content)" type="button">
+                    Adicionar aluno
+                  </button>
+                </blank-state>
+              </div>
+            </form>
+          </div>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Atividades" *ngIf="turma.objectId">
+        <ng-template ngbTabContent>
+          <div class="new-turma">
+            <button class="add btn btn-sm btn-primary pull-right" routerLink="/add-atividade/{{turma.objectId}}" *ngIf="atividades && atividades.length > 0">
+              Adicionar atividade
+            </button>
+            <div class="jumbotron atividades" *ngIf="atividades.length === 0">
+              <blank-state icon="fa fa-pencil-square-o">
+                <h5>Nenhuma atividade adicionada</h5>
+                <p>
+                  Adicionando atividades, você receberá relatório de desempenho dos seus alunos.
+                </p>
+                <button class="btn btn-primary btn-sm" routerLink="/add-atividade/{{turma.objectId}}" type="button" >
+                  Adicionar atividade
+                </button>
+              </blank-state>
+            </div>
+
+            <table class="table table-striped" *ngIf="atividades && atividades.length > 0">
+              <thead>
+                <tr>
+                  <th>Nome da atividade</th>
+                  <th>Deletar</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let atividade of atividades; let index = index;">
+                  <td>
+                    <a routerLink="/add-atividade/{{turma.objectId}}/{{atividade.objectId}}">{{ atividade.nome }}</a>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-danger" (click)="deletarAtividade(atividade, index)" [disabled]="atividade.deletando">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Pesquisar alunos</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-group new-aluno" (submit)="search(text)">
+        <input type="text" [(ngModel)]="text" class="form-control" placeholder="Qual o email do seu aluno?" [ngModelOptions]="{standalone: true}">
+        <button class="btn btn-primary" (click)="search(text)" [disabled]="searching || text.length === 0">
+          <i class="fa fa-search" *ngIf="!searching"></i>
+          <i class="fa fa-spinner fa-spin" *ngIf="searching"></i>
+        </button>
+      </form>
+
+      <div class="tip">
+        Digite o email do seu aluno e pressione Enter para pesquisar
+      </div>
+
+      <table class="table table-striped" *ngIf="alunos && alunos.length > 0">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Selecionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let aluno of alunos">
+            <td>{{aluno.username}}</td>
+            <td>
+              <button class="btn btn-success btn-sm" (click)="select(aluno)">
+                <i class="fa fa-check"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="jumbotron" style="float: left;margin-top: 20px;width: 100%;" *ngIf="alunos &&  alunos.length === 0">
+        Nenhum aluno encontrado.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Fechar</button>
+    </div>
+  </ng-template>
+
+
+
+</div>

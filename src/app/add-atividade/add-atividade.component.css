@@ -1,0 +1,43 @@
+form, h5 {
+    margin-top: 20px;
+}
+
+.add-atividade {
+    padding-bottom: 30px;
+}
+.new-aluno input {
+    width: calc(100% - 70px);
+    float: left;
+}
+
+.new-aluno .btn {
+    float: right;
+}
+
+.form-group.top {
+    margin-top: 20px;
+}
+
+.table {
+    margin-bottom: 0px !important;
+}
+
+.delete {
+    margin-top: 10px;
+}
+
+.container {
+    margin-top: 30px;
+}
+
+chart {
+    margin-top: 30px;
+}
+
+.respostas {
+    margin-top: 50px;
+}
+
+.margin-top {
+    margin-top: 30px;
+}

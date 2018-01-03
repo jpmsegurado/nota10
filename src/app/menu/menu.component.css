@@ -1,0 +1,19 @@
+.menu ul, .menu ul li {
+    float: right;
+}
+
+.menu ul li {
+    margin: 0 10px;
+}
+
+.menu ul {
+    display: initial;
+}
+
+.menu {
+    float: right;
+}
+
+.navbar-brand {
+    color: #fff !important;
+}
