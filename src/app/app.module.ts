@@ -12,11 +12,13 @@ import { MenuComponent } from './menu/menu.component';
 import { TurmasComponent } from './turmas/turmas.component';
 import { TurmaService } from './turma.service';
 import { AddTurmaComponent } from './add-turma/add-turma.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { AlunoService } from './aluno.service';
 import { AddAtividadeComponent } from './add-atividade/add-atividade.component';
 import { BlankStateComponent } from './blank-state/blank-state.component';
 import { ChartModule } from 'angular2-chartjs';
+import { ConteudoService } from './conteudo.service';
+import { RegisterComponent } from './register/register.component';
 
 Parse.serverURL = 'https://professor-server.herokuapp.com/parse';
 Parse.initialize('9ac78096f6a609ac63227bc1ba09a004b8d513f7', '9ac78096f6a609ac63227bc1ba09a004b8d513f7');
@@ -32,6 +34,7 @@ Parse.initialize('9ac78096f6a609ac63227bc1ba09a004b8d513f7', '9ac78096f6a609ac63
     AddTurmaComponent,
     AddAtividadeComponent,
     BlankStateComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +48,8 @@ Parse.initialize('9ac78096f6a609ac63227bc1ba09a004b8d513f7', '9ac78096f6a609ac63
     UserService,
     TurmaService,
     AlunoService,
+    ConteudoService,
+    NgbDropdown,
   ],
   bootstrap: [AppComponent]
 })

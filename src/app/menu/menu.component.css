@@ -17,3 +17,13 @@
 .navbar-brand {
     color: #fff !important;
 }
+
+.user {
+    position: relative;
+    top: 7px;
+}
+
+.show > .dropdown-menu {
+    left: initial !important;
+    right: 0px;
+}

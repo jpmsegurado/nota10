@@ -31,8 +31,8 @@
                 </label>
                 <input [(ngModel)]="turma.chave" [ngModelOptions]="{standalone: true}" class="form-control" readonly>
                 <div class="tip">
-                  Passe essa chave <strong>apenas</strong> para os alunos desta turma.
-                  Assim, eles poderão se inscrever na turma sozinhos.
+                  Passe essa chave
+                  <strong>apenas</strong> para os alunos desta turma. Assim, eles poderão se inscrever na turma sozinhos.
                 </div>
               </div>
 
@@ -89,7 +89,7 @@
                 <p>
                   Adicionando atividades, você receberá relatório de desempenho dos seus alunos.
                 </p>
-                <button class="btn btn-primary btn-sm" routerLink="/add-atividade/{{turma.objectId}}" type="button" >
+                <button class="btn btn-primary btn-sm" routerLink="/add-atividade/{{turma.objectId}}" type="button">
                   Adicionar atividade
                 </button>
               </blank-state>
@@ -116,6 +116,58 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Conteúdos" *ngIf="turma.objectId">
+        <ng-template ngbTabContent>
+          <div class="conteudos">
+            <button class="btn btn-sm pull-right btn-primary add" *ngIf="conteudos.length > 0" (click)="upload()">
+              Adicionar conteúdo
+            </button>
+
+            <div class="jumbotron atividades" *ngIf="conteudos.length === 0">
+              <blank-state icon="fa fa-file-pdf-o">
+                <h5>Nenhuma conteúdo adicionado</h5>
+                <p>
+                  Adicionando conteúdos, você poderá reforçar o conteúdo que você ensinou em aula.
+                </p>
+                <button class="btn btn-primary btn-sm pointer" type="button" (click)="upload()">
+                  Adicionar conteúdo
+                </button>
+              </blank-state>
+            </div>
+            <table class="table table-striped" *ngIf="conteudos.length > 0">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Deletar</th>
+                  <th>Abrir</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let conteudo of conteudos; let index = index;">
+                  <td>
+                    <input type="text" class="form-control" [(ngModel)]="conteudo.nome" (keydown)="changeName(conteudo)">
+                    <i class="fa fa-spinner fa-spin" *ngIf="conteudo.loading"></i>
+                    <i class="fa fa-check text-green" *ngIf="!conteudo.loading && conteudo.saved"></i>
+                  </td>
+                  <td>
+                    <button class="btn btn-danger btn-sm" (click)="deleteConteudo(conteudo, index)" [disabled]="conteudo.deletando">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                  <td>
+                    <a class="btn btn-primary btn-sm" href="https://ucarecdn.com/{{conteudo.fileId}}/{{conteudo.nome}}" target="_blank">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="tip" *ngIf="conteudos.length > 0">Caso desejar, altere o nome do conteúdo, e ele irá ser atualizado automaticamente.</div>
+
           </div>
         </ng-template>
       </ngb-tab>

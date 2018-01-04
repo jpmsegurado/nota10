@@ -15,12 +15,16 @@ export class MenuComponent implements OnInit {
   }];
 
   public path: String;
+  public user: any = {};
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public userService: UserService
-  ) { }
+  ) {
+    this.user = this.userService.getCurrentUser();
+    console.log(this.user);
+  }
 
   ngOnInit() {
     this.route.url.subscribe((params) => {
@@ -32,6 +36,10 @@ export class MenuComponent implements OnInit {
         }
       }
     });
+  }
+
+  logout() {
+    this.userService.logout().then(() => this.router.navigate(['login']));
   }
 
 }

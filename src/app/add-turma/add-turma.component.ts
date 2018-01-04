@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AlunoService } from '../aluno.service';
 import { TurmaService } from '../turma.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ConteudoService } from '../conteudo.service';
 
 @Component({
   selector: 'app-add-turma',
@@ -29,6 +30,8 @@ export class AddTurmaComponent implements OnInit {
     private turmaService: TurmaService,
     public router: Router,
     public activatedRoute: ActivatedRoute,
+    public conteudoService: ConteudoService,
+    public zone: NgZone,
   ) { }
 
   ngOnInit() {
@@ -40,7 +43,12 @@ export class AddTurmaComponent implements OnInit {
 
         this.turmaService.getAtividades(params.id).then((atividades) => {
           this.atividades = atividades;
-          this.loadingInfo = false;
+          this.conteudoService.get(params.id).then((conteudos) => {
+            this.conteudos = conteudos;
+            this.loadingInfo = false;
+          }, () => {
+            this.loadingInfo = false;
+          })
         }, () => {
           this.loadingInfo = false;
         })
@@ -48,6 +56,38 @@ export class AddTurmaComponent implements OnInit {
       }, () => {
         this.loadingInfo = false;
       });
+    });
+  }
+
+  upload() {
+    this.conteudoService.uploadFile().then((file: any) => {
+      this.conteudoService.add(this.turma.objectId, file.uuid, file.name).then((conteudo) => {
+        this.conteudos.push(conteudo.toJSON());
+      });
+    });
+  }
+
+  changeName(conteudo) {
+    if(conteudo.timeout) {
+      window.clearTimeout(conteudo.timeout);
+    }
+
+    this.zone.run(() => {
+      conteudo.timeout = setTimeout(() => {
+        conteudo.loading = true;
+        this.conteudoService.update(conteudo).then((cont) => {
+          conteudo.loading = false;
+          conteudo.saved = true;
+          console.log(conteudo);
+        });
+      }, 300);
+    })
+  }
+
+  deleteConteudo(conteudo, index) {
+    conteudo.deletando = true;
+    this.conteudoService.delete(conteudo.objectId).then((conteudo) => {
+      this.conteudos.splice(index, 1);
     });
   }
 

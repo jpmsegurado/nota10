@@ -4,10 +4,12 @@ import { TurmasComponent } from "../app/turmas/turmas.component";
 import { AddTurmaComponent } from "../app/add-turma/add-turma.component";
 import { AddAtividadeComponent } from "../app/add-atividade/add-atividade.component";
 import { Routes } from "@angular/router";
+import { RegisterComponent } from "../app/register/register.component";
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'turmas', component: TurmasComponent },
     { path: 'add-turma/:id', component: AddTurmaComponent },

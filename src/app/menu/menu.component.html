@@ -2,6 +2,15 @@
   <div class="container">
     <a class="navbar-brand">Nota 10</a>
 
+    <div class="pull-right" ngbDropdown>
+      <button class="btn user btn-sm btn-outline-default pull-right" id="dropdownConfig" ngbDropdownToggle>
+        {{ user.nome }}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownConfig">
+        <button class="dropdown-item" (click)="logout()">Sair</button>
+      </div>
+    </div>
+
     <div class="menu">
       <ul class="navbar-nav">
         <li class="nav-item" *ngFor="let item of menu">

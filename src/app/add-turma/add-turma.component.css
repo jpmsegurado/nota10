@@ -1,4 +1,4 @@
-.new-turma {
+.new-turma, .conteudos {
     margin-top: 20px;
 }
 .loading {
@@ -42,4 +42,18 @@ ngb-tabset {
     margin-top: 20px;
     float: left;
     width: 100%;
+}
+
+table td {
+    position: relative;
+}
+
+td .fa-spinner, td .fa-check {
+    position: absolute;
+    top: 23px;
+    right: 21px;
+}
+
+td input {
+    padding-right: 30px;
 }
