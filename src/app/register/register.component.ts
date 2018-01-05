@@ -27,7 +27,7 @@ export class RegisterComponent {
     this.loading = true;
     this.userService.signUp(form.value).then(() => {
       this.router.navigate(['turmas']);
-    })
+    }, () => this.loading = false)
   }
 
 }

@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+    font-family: american;
+    src: url('./assets/American Typewriter Regular.ttf');
+}
+
 .btn, .pointer {
     cursor: pointer;
 }
@@ -10,7 +16,9 @@
     width: 100%;
     color: #777;
 }
-
+.american {
+    font-family: american;
+}
 .gray-text {
     color: #777;
 }

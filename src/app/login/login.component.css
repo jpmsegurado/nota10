@@ -1,5 +1,5 @@
 .login {
-    background-color: #ececec;
+    background-color: #0094cf;
     position: absolute;
     top: 0;
     left: 0;
@@ -12,4 +12,8 @@
 
 .title {
     margin-bottom: 40px;
+}
+
+label, .title {
+    color: #fff;
 }
