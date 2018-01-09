@@ -28,6 +28,12 @@ export class UserService {
     return user.signUp();
   }
 
+  seenAlert() {
+    const user = Parse.User.current();
+    user.set('seenAlert', new Date());
+    return user.save();
+  }
+
   logout() {
     return Parse.User.logOut();
   }

@@ -17,3 +17,10 @@
 label, .title {
     color: #fff;
 }
+
+.login-form {
+    padding: 20px;
+    box-sizing: border-box;
+    border: solid 1px #fff;
+    border-radius: 10px;
+}

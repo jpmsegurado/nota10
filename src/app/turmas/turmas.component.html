@@ -47,4 +47,31 @@
       </tbody>
     </table>
   </div>
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Estamos em fase de testes.</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h5>Obrigado por nos ajudar!</h5>
+      <br>
+      <p>
+        Atualmente estamos em teste beta gratuito, para obtermos o máximo de feedback de nossos usuários,
+        à respeito de melhorias e novas funcionalidades, com o intuito 
+        de providenciar uma experiência melhor no ensino do seus alunos.
+      </p>
+
+      <p>
+        Assim que sairmos do teste beta para uma versão de lançamento, iremos te avisar, e você ganhará
+        algumas cortesias pela sua ajuda.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Fechar</button>
+    </div>
+  </ng-template>
+
 </div>
