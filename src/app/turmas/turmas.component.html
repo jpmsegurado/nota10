@@ -28,7 +28,6 @@
       <thead>
         <tr>
           <th>Nome</th>
-          <th>N° de alunos</th>
           <th>Deletar</th>
         </tr>
       </thead>
@@ -37,7 +36,6 @@
           <td>
             <a routerLink="/add-turma/{{turma.objectId}}">{{ turma.nome }}</a>
           </td>
-          <td>{{ turma.alunos ? turma.alunos.length : 0 }}</td>
           <td>
             <button class="btn btn-sm btn-danger" (click)="deletar(turma, index)" [disabled]="turma.deletando">
               <i class="fa fa-trash"></i>
