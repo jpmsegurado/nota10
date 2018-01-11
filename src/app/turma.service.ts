@@ -38,8 +38,8 @@ export class TurmaService {
   add(turma, id?) {
     const Turma = Parse.Object.extend('Turma');
     const newTurma = new Turma();
-    if(id) newTurma.id = id;
-    if(!id) newTurma.set('chave', shortid().toUpperCase());
+    if (id) newTurma.id = id;
+    if (!id) newTurma.set('chave', shortid().toUpperCase());
     newTurma.set('nome', turma.nome);
     newTurma.set('alunos', turma.alunos);
     newTurma.set('professor', Parse.User.current());
@@ -49,7 +49,7 @@ export class TurmaService {
   addAtividade(atividade, turmaId, id?) {
     const Atividade = Parse.Object.extend('Atividade');
     const newAtividade = new Atividade();
-    if(id) newAtividade.id = id;
+    if (id) newAtividade.id = id;
     const Turma = Parse.Object.extend('Turma');
     const turma = new Turma();
     turma.id = turmaId;
@@ -80,6 +80,43 @@ export class TurmaService {
     const query = new Parse.Query('Atividade');
     query.equalTo('objectId', id);
     return query.first().then(item => item.destroy());
+  }
+
+  insertAluno(aluno, turmaId) {
+    const Inscricao = Parse.Object.extend('Inscricao');
+    const Turma = Parse.Object.extend('Turma');
+    const inscricao = new Inscricao();
+    const turma = new Turma();
+    const user = new Parse.User();
+    user.id = aluno.objectId;
+    turma.id = turmaId;
+    inscricao.set('aluno', user);
+    inscricao.set('turma', turma);
+    return inscricao.save();
+  }
+
+  getAlunos(turmaId) {
+    const query = new Parse.Query('Inscricao');
+    const Turma = Parse.Object.extend('Turma');
+    const turma = new Turma();
+    turma.id = turmaId;
+    query.include('aluno');
+    query.equalTo('turma', turma);
+    return query.find().then(res => res.map(item => item.toJSON().aluno));
+  }
+
+  deleteAluno(aluno, turmaId) {
+    const query = new Parse.Query('Inscricao');
+    const userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo('objectId', aluno.objectId);
+    return userQuery.find().then((user) => {
+      const Turma = Parse.Object.extend('Turma');
+      const turma = new Turma();
+      turma.id = turmaId;
+      query.equalTo('aluno', user[0]);
+      query.equalTo('turma', turma);
+      return query.first().then(item => item.destroy());
+    });
   }
 
 }

@@ -54,7 +54,7 @@
                   <tr *ngFor="let aluno of turma.alunos; let index = index;">
                     <td>{{ aluno.username }}</td>
                     <td>
-                      <button class="btn btn-sm btn-danger" (click)="turma.alunos.splice(index)" [disabled]="loading">
+                      <button class="btn btn-sm btn-danger" (click)="deletarAluno(aluno, index)" [disabled]="loading">
                         <i class="fa fa-trash"></i>
                       </button>
                     </td>
@@ -137,7 +137,7 @@
                 </button>
               </blank-state>
             </div>
-            <table class="table table-striped" *ngIf="conteudos.length > 0">
+            <table class="table table-striped conteudos" *ngIf="conteudos.length > 0">
               <thead>
                 <tr>
                   <th>Nome</th>

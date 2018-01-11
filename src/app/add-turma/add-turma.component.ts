@@ -45,7 +45,13 @@ export class AddTurmaComponent implements OnInit {
           this.atividades = atividades;
           this.conteudoService.get(params.id).then((conteudos) => {
             this.conteudos = conteudos;
-            this.loadingInfo = false;
+            this.turmaService.getAlunos(params.id).then((alunos) => {
+              this.turma.alunos = alunos;
+              console.log(alunos);
+              this.loadingInfo = false;
+            }, () => {
+              this.loadingInfo = false;
+            })
           }, () => {
             this.loadingInfo = false;
           })
@@ -142,11 +148,19 @@ export class AddTurmaComponent implements OnInit {
     })
   }
 
+  deletarAluno(aluno, index) {
+    aluno.deleting = true;
+    this.turmaService.deleteAluno(aluno, this.turma.objectId).then(() => {
+      this.turma.alunos.splice(index, 1);
+    }, () => aluno.deleting = false);
+  }
+
   select(aluno) {
     if(!this.turma.alunos) this.turma.alunos = [];
     const index = this.turma.alunos.findIndex((user) => user.username === aluno.username)
     if(index === -1) this.turma.alunos.push({ id: aluno.objectId, username: aluno.username });
     this.modal.dismiss();
+    this.turmaService.insertAluno(aluno, this.turma.objectId)
   }
 
 }

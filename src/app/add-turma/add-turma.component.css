@@ -48,10 +48,14 @@ table td {
     position: relative;
 }
 
-td .fa-spinner, td .fa-check {
+td .fa-spinner, .conteudos .fa-check {
     position: absolute;
     top: 23px;
     right: 21px;
+}
+
+td button {
+    position: relative;
 }
 
 td input {
